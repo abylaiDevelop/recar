@@ -3,9 +3,7 @@ package kz.recar.services.ws;
 
 import kz.recar.model.User;
 import kz.recar.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import javax.jws.WebService;
 
@@ -19,7 +17,7 @@ public class WSUserServiceImpl implements WSUserService {
 
     private final UserRepository userRepository;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     public WSUserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,7 +26,7 @@ public class WSUserServiceImpl implements WSUserService {
     @Override
     public User getUser(String login) {
         User user = userRepository.findByLogin(login);
-        if(user == null) throw new UsernameNotFoundException("User not found");
+        if(user == null) return null;
         return user;
     }
 
@@ -40,7 +38,7 @@ public class WSUserServiceImpl implements WSUserService {
             User user = new User();
             user.setUserName(name);
             user.setLogin(email);
-            user.setPassword(passwordEncoder.encode(password));
+            user.setPassword(password);
             return userRepository.save(user);
         }
         return null;
