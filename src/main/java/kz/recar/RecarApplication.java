@@ -3,6 +3,7 @@ package kz.recar;
 import kz.recar.model.Auto;
 import kz.recar.model.Post;
 import kz.recar.repository.AutoRepository;
+import kz.recar.services.AutoService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,28 +24,15 @@ public class RecarApplication {
 //    CommandLineRunner runner(AutoRepository repository) {
 //        return args -> {
 //
-//            Post post = new Post(
-//                    LocalDateTime.now(),
-//                    "",
-//                    "new Audi"
-//            );
-//            List<Post> posts = new ArrayList<>();
-//            posts.add(post);
 //
-//            Auto audi = new Auto(
-//                    "abyl",
-//                    "password",
-//                    "",
-//                    "Audi portfolio",
-//                    posts
-//            );
+//            Auto audi = new Auto();
+//            audi.setLogin("audi");
+//            audi.setPassword("audi");
+//            audi.setDescription("new audi");
 //
-//            Auto check = repository.findByLogin("abyl");
-//            if (check == null) {
-//                repository.insert(audi);
-//            } else {
-//                System.out.println("Auto exists");
-//            }
+//            AutoService service = new AutoService();
+//            service.createAuto(audi);
+//
 //
 //        };
 //    }

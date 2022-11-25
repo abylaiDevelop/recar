@@ -4,15 +4,22 @@ package kz.recar.services;
 import kz.recar.model.Auto;
 import kz.recar.repository.AutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AutoService {
+public class AutoService implements UserDetailsService {
 
     @Autowired
     private  AutoRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<Auto> getAutos() {
         return repository.findAll();
@@ -22,8 +29,9 @@ public class AutoService {
         Auto check = repository.findByLogin(auto.getLogin());
 
         if (check == null) {
+            auto.setPassword(passwordEncoder.encode(auto.getPassword()));
             repository.insert(auto);
-            return repository.findByLogin(auto.getLogin());
+            return auto;
         } else {
             throw new IllegalArgumentException("auto already exists");
         }
@@ -48,5 +56,10 @@ public class AutoService {
     }
 
 
-
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Auto auto = repository.findByLogin(username);
+        if (auto == null) throw new UsernameNotFoundException("can not find auto");
+        return auto;
+    }
 }
