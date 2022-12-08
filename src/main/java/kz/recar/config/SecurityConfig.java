@@ -1,6 +1,7 @@
 package kz.recar.config;
 
 import kz.recar.services.AutoService;
+import kz.recar.services.AutoServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,12 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true, securedEnabled = true)
 public class SecurityConfig {
 
     @Bean
-    public AutoService autoService() {return new AutoService();}
+    public AutoService autoService() {return new AutoServiceImpl();}
 
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
@@ -27,33 +26,28 @@ public class SecurityConfig {
 //                .antMatchers("/api/**");
 //    }
 
+
+
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         AuthenticationManagerBuilder builder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         builder.userDetailsService(autoService());
 
-        http.exceptionHandling().accessDeniedPage("/403");
+        http
+                .csrf().disable()
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .httpBasic();
 
-        http.authorizeRequests().antMatchers("/static/css/**", "/js/**","/Service/user","/api/**").permitAll();
-        http.formLogin()
-                .loginProcessingUrl("/auth")
-                .usernameParameter("login")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-                .failureUrl("/enter?error");
-
-        http.logout()
-                .logoutSuccessUrl("/enter")
-                .logoutUrl("/exit");
-
-        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/Service/user","/api/**").permitAll();
         return http.build();
     }
+
+
 }

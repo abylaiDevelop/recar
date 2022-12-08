@@ -1,9 +1,8 @@
 package kz.recar.controller;
 
 import kz.recar.model.Auto;
-import kz.recar.services.AutoService;
+import kz.recar.services.AutoServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class AutoController {
 
-    private final AutoService autoService;
+    private final AutoServiceImpl autoServiceImpl;
 
     @GetMapping
     public List<Auto> getAutos() {
-        return autoService.getAutos();
+        return autoServiceImpl.getAutos();
     }
 
     @PostMapping("/add")
@@ -36,7 +35,7 @@ public class AutoController {
         auto.setDescription(description);
         auto.setPassword(password);
 
-        return autoService.createAuto(auto);
+        return autoServiceImpl.createAuto(auto);
     }
 
     @PostMapping("/update")
@@ -51,7 +50,7 @@ public class AutoController {
         auto.setLogin(login);
         auto.setDescription(description);
 
-        return autoService.updateAuto(auto);
+        return autoServiceImpl.updateAuto(auto);
     }
 
 

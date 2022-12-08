@@ -3,35 +3,53 @@ package kz.recar.model;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
-@Data
-@Document
-@Setter
+@Entity
+@Table(name = "t_user")
 @Getter
+@Setter
 public class Auto implements UserDetails {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
     @Indexed(unique = false)
     private String login;
     private String password;
     private String photo;
     private String description;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<Post> posts;
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<Post> likedPosts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     private List<Post> savedPosts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    private List<Permission> permissions;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return permissions;
     }
 
     @Override
