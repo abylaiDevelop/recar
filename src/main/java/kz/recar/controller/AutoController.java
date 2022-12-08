@@ -1,5 +1,6 @@
 package kz.recar.controller;
 
+import io.swagger.annotations.Api;
 import kz.recar.model.Auto;
 import kz.recar.services.AutoServiceImpl;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/autos")
 @AllArgsConstructor
+@Api(value = "User Resource REST Endpoint", description = "Shows the user info")
 public class AutoController {
 
     private final AutoServiceImpl autoServiceImpl;
@@ -55,6 +57,8 @@ public class AutoController {
 
         return autoServiceImpl.updateAuto(auto);
     }
+
+
 
 
 }
