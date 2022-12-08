@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import kz.recar.model.Auto;
 import kz.recar.services.AutoServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -27,31 +24,12 @@ public class AutoController {
     }
 
     @PostMapping("/add")
-    public Auto createAuto(HttpServletRequest request) {
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        String description = request.getParameter("description");
-
-        Auto auto = new Auto();
-        auto.setLogin(login);
-        auto.setDescription(description);
-        auto.setPassword(password);
-
+    public Auto createAuto(@RequestBody Auto auto) {
         return autoServiceImpl.createAuto(auto);
     }
 
     @PostMapping("/update")
-    public Auto updateAuto(HttpServletRequest request) {
-        String login = request.getParameter("login");
-        String password = request.getParameter("password");
-        String description = request.getParameter("description");
-
-        Auto auto = new Auto();
-
-        auto.setPassword(password);
-        auto.setLogin(login);
-        auto.setDescription(description);
-
+    public Auto updateAuto(@RequestBody Auto auto) {
         return autoServiceImpl.updateAuto(auto);
     }
 
