@@ -3,6 +3,7 @@ package kz.recar.controller;
 import kz.recar.model.Auto;
 import kz.recar.services.AutoServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.List;
 public class AutoController {
 
     private final AutoServiceImpl autoServiceImpl;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @GetMapping
     public List<Auto> getAutos() {
@@ -35,6 +37,7 @@ public class AutoController {
         auto.setDescription(description);
         auto.setPassword(password);
 
+        kafkaTemplate.send("auto",auto.getDescription());
         return autoServiceImpl.createAuto(auto);
     }
 
