@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/autos")
 @AllArgsConstructor
-@Api(value = "User Resource REST Endpoint", description = "Shows the user info")
+//@Api(value = "User Resource REST Endpoint", description = "Shows the user info")
 public class AutoController {
 
     private final AutoServiceImpl autoServiceImpl;

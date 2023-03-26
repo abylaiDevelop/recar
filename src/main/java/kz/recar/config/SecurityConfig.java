@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public AutoService autoService() {return new AutoServiceImpl();}
+  @Bean
+  public AutoService autoService() {return new AutoServiceImpl();}
 
 //    @Bean
 //    public WebSecurityCustomizer webSecurityCustomizer() {
@@ -28,26 +28,26 @@ public class SecurityConfig {
 
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManagerBuilder builder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(autoService());
+    AuthenticationManagerBuilder builder =
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+    builder.userDetailsService(autoService());
 
-        http
-                .csrf().disable()
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
-                .httpBasic();
+    http
+      .csrf().disable()
+      .authorizeRequests().anyRequest().authenticated()
+      .and()
+      .httpBasic();
 
-        return http.build();
-    }
+    return http.build();
+  }
 
 
 }
