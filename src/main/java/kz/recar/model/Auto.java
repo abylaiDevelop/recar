@@ -14,68 +14,18 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "t_user")
+@Table(name = "t_auto")
 @Getter
 @Setter
-public class Auto implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-    private String login;
-    private String password;
-    private String photo;
-    private String description;
+public class Auto extends BaseEntity {
+  private String year;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<Post> posts;
+  private String color;
 
+  private Double volume;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<Post> likedPosts;
+  private String plate_number;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<Post> savedPosts;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SELECT)
-    private List<Permission> permissions;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return permissions;
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+  @OneToOne
+  private Model model;
 }

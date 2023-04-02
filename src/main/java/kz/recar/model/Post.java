@@ -1,28 +1,47 @@
 package kz.recar.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "t_posts")
+@Table(name = "t_post")
 @Getter
 @Setter
-public class Post {
-    private LocalDateTime date;
-    private String photos;
+public class Post extends BaseEntity {
     private String description;
 
-    @OneToOne
-    private Auto author;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @ManyToOne
+    private User author;
 
+    @ManyToOne
+    private Club authorClub;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "post")
+    private List<PostComment> postComments;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "caption")
+    private String caption;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<User> reactionToPost;
+
+    @ManyToMany(mappedBy = "savedPosts", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List<User> savePostUsers;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<PostMedia> postMedia;
+
+    @OneToOne
+    private PostType postType;
 
 }

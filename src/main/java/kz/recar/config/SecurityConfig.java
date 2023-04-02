@@ -1,36 +1,37 @@
 package kz.recar.config;
 
-import kz.recar.services.AutoService;
-import kz.recar.services.AutoServiceImpl;
+import kz.recar.security.JwtConfigurer;
+import kz.recar.security.JwtTokenProvider;
+import kz.recar.services.UserService;
+import kz.recar.services.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true, securedEnabled = true)
 public class SecurityConfig {
 
-  @Bean
-  public AutoService autoService() {return new AutoServiceImpl();}
+  private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
+  private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring()
-//                .antMatchers("/api/**");
-//    }
-
-
+  private final JwtTokenProvider jwtTokenProvider;
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+  public UserService autoService() {return new UserServiceImpl();}
+
+  @Autowired
+  public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
+    this.jwtTokenProvider = jwtTokenProvider;
   }
 
   @Bean
@@ -41,10 +42,16 @@ public class SecurityConfig {
     builder.userDetailsService(autoService());
 
     http
-      .csrf().disable()
-      .authorizeRequests().anyRequest().authenticated()
-      .and()
-      .httpBasic();
+            .httpBasic().disable()
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers(LOGIN_ENDPOINT).permitAll()
+            .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
+            .anyRequest().authenticated()
+            .and()
+            .apply(new JwtConfigurer(jwtTokenProvider));
 
     return http.build();
   }

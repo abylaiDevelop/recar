@@ -13,6 +13,10 @@
     <artifactId>diploma</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <jsonwebtoken.version>0.8.0</jsonwebtoken.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -125,6 +129,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jsonwebtoken.version}</version>
         </dependency>
 
 

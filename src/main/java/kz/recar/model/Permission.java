@@ -10,14 +10,8 @@ import javax.persistence.*;
 @Table(name = "t_permissions")
 @Getter
 @Setter
-public class Permission implements GrantedAuthority {
-
-
+public class Permission extends BaseEntity implements GrantedAuthority {
     private String name;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
 
     @Override
     public String getAuthority() {

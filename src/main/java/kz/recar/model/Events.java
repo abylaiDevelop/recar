@@ -1,18 +1,34 @@
 package kz.recar.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
+import javax.persistence.*;
 import java.util.List;
 
-@Data
-public class Events {
-    private Auto author;
-    private LocalDateTime date;
-    private String location;
-    private String description;
-    private String name;
-    private List<Auto> members;
+@Entity
+@Table(name = "t_events")
+@Getter
+@Setter
+public class Events extends BaseEntity {
+    @ManyToOne
+    private Club author;
 
+    private String name;
+
+    @OneToOne
+    private Location location;
+
+    private String description;
+
+    @ManyToMany
+    private List<User> members;
+
+    public void addMember(User user) {
+        this.members.add(user);
+    }
+
+    public void deleteMember(User user) {
+        this.members.remove(user);
+    }
 }
