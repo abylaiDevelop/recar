@@ -11,6 +11,13 @@ services:
     - 5433:5432
     volumes:
     - "./data/diploma"
+  diploma:
+    image: diploma.jar:latest
+    container_name: diploma-recar
+    ports:
+    - 8080:8080
+    depends_on:
+      - postgres
 
 volumes:
   data: {}
