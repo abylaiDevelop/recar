@@ -36,6 +36,11 @@ public class PostController {
     return postService.createPost(post, file, postMedia);
   }
 
+  @PostMapping("/add/test")
+  public void addPostTest(@RequestBody Map<Object, Object> postMedia) {
+    postService.test(postMedia);
+  }
+
   @PostMapping("/delete{id}")
   public ResponseEntity<?> deletePost(@PathVariable Long id) throws Exception {
     boolean isDeleted = postService.delete(id);

@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PostService {
@@ -42,8 +45,8 @@ public class PostService {
     Photo filepath = photoService.uploadPhoto(file);
     postMedia.setMediaFile(filepath.getPath());
     post.setAuthor(currentUser);
-
     Post newPost = postRepository.save(post);
+    newPost.setCreatedAt(LocalDateTime.now());
     postMedia.setPost(newPost);
     return postMediaRepository.save(postMedia).getPost();
   }
@@ -87,5 +90,19 @@ public class PostService {
         break;
     }
     postRepository.save(post);
+  }
+
+  public Post test(Map<Object, Object> json) {
+    String caption = (String) json.get("caption");
+    Post post = new Post();
+    post.setCaption(caption);
+    post = postRepository.save(post);
+    ArrayList<Object> postMedia = (ArrayList<Object>) json.get("mediaPosts");
+    for (Object data: postMedia) {
+      HashMap<Object, Object> hashMap = (HashMap<Object, Object>) data;
+      Long position = (Long) hashMap.get("position");
+      String file = (String) hashMap.get("file");
+    }
+    return null;
   }
 }

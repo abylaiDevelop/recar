@@ -45,6 +45,12 @@ public class UserServiceImpl implements UserService {
 
   private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+  public boolean authorize(String login, String password) {
+    User user = this.loadUserByUsername(login);
+    password = passwordEncoder.encode(password);
+    return user.getLogin().equals(login) || password.equals(user.getPassword());
+  }
+
   public List<User> getUsers() {
     return repository.findAll();
   }

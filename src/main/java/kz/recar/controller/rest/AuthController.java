@@ -36,21 +36,26 @@ public class AuthController {
     try {
       String username = requestDto.getUsername();
       User user = userService.loadUserByUsername(username);
+      String password = requestDto.getPassword();
 
-      String token = jwtTokenProvider.createToken(username, user.getPermissions());
-
+      boolean auth = userService.authorize(username, password);
       Map<Object, Object> response = new HashMap<>();
-      response.put("username", username);
-      response.put("token", token);
+      if (auth) {
+        String token = jwtTokenProvider.createToken(username, user.getPermissions());
+        response.put("username", username);
+        response.put("token", token);
 
-      return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
+      } else {
+        throw new BadCredentialsException("Invalid username or password");
+      }
     } catch (AuthenticationException e) {
       throw new BadCredentialsException("Invalid username or password");
     }
   }
 
   @PostMapping("/register")
-  public ResponseEntity register(UserDto userDto) {
+  public ResponseEntity register(@RequestBody UserDto userDto) {
     User user = userService.createUser(userDto);
 
     String token = jwtTokenProvider.createToken(user.getLogin(), user.getPermissions());

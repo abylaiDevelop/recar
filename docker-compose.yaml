@@ -10,7 +10,7 @@ services:
     ports:
     - 5433:5432
     volumes:
-    - "./data/diploma"
+    - "var/lib/data/postgres"
   diploma:
     image: diploma.jar:latest
     container_name: diploma-recar
