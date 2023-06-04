@@ -43,7 +43,7 @@ public class PostService {
   public Post createPost(Post post, MultipartFile file, PostMedia postMedia) {
     User currentUser = userService.getCurrentUser();
     Photo filepath = photoService.uploadPhoto(file);
-    postMedia.setMediaFile(filepath.getPath());
+    postMedia.setMediaFile(filepath.getDowloadUri());
     post.setAuthor(currentUser);
     Post newPost = postRepository.save(post);
     newPost.setCreatedAt(LocalDateTime.now());
