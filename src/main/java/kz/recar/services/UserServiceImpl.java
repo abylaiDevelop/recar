@@ -47,8 +47,7 @@ public class UserServiceImpl implements UserService {
 
   public boolean authorize(String login, String password) {
     User user = this.loadUserByUsername(login);
-    password = passwordEncoder.encode(password);
-    return user.getLogin().equals(login) && password.equals(user.getPassword());
+    return user.getLogin().equals(login) && passwordEncoder.matches(password, user.getPassword());
   }
 
   public List<User> getUsers() {

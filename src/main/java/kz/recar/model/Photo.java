@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 public class Photo extends BaseEntity {
   public String path;
+  public String fileCode;
+  public String dowloadUri;
   public LocalDateTime createdAt;
 
 }

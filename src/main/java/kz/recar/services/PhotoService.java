@@ -4,6 +4,10 @@ import kz.recar.model.Photo;
 import kz.recar.model.User;
 import kz.recar.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,11 +15,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
 
 @Service
 public class PhotoService {
@@ -23,6 +30,7 @@ public class PhotoService {
 
   private final PhotoRepository repository;
 
+  private Path foundfile;
 
   @Autowired
   public PhotoService(PhotoRepository repository) {
@@ -43,11 +51,15 @@ public class PhotoService {
     try {
       this.init(root);
       long photoId = this.getLastId() + 1L;
-      String photoName = "user_" + this.getCurrentUser().getId() + "photo_" + photoId;
+      String fileCode = RandomStringUtils.randomAlphanumeric(8);
+      String photoName = fileCode + "photo_" + photoId;
       Path fileNameAndPath = Paths.get(root.toString(), photoName+getExtensionByStringHandling(file.getOriginalFilename()).get());
       Files.copy(file.getInputStream(), fileNameAndPath);
       Photo photo = new Photo();
-      photo.setPath(fileNameAndPath.toString());
+      photo.setPath(photoName);
+      photo.setFileCode(fileCode);
+      photo.setDowloadUri("/api/v1/file/download/" + fileCode);
+      photo.setCreatedAt(LocalDateTime.now());
       return repository.save(photo);
     } catch (Exception e) {
       if (e instanceof FileAlreadyExistsException) {
@@ -83,6 +95,23 @@ public class PhotoService {
       return userPhoto.get().getId();
     }
     else return -1L;
+  }
+
+  public Resource downloadFile(String filePath) throws IOException {
+    String directoryName = "user_"+this.getCurrentUser().getId();
+    Path dirPath = Paths.get(UPLOAD_DIRECTORY, directoryName);
+    Files.list(dirPath).forEach(file -> {
+      if (file.getFileName().toString().startsWith(filePath)) {
+        this.foundfile = file;
+      }
+    });
+
+    if (this.foundfile != null) {
+      return new UrlResource(this.foundfile.toUri());
+    }
+
+    return null;
+
   }
 
   public Optional<String> getExtensionByStringHandling(String filename) {
