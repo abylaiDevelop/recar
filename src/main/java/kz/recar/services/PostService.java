@@ -105,4 +105,17 @@ public class PostService {
     }
     return null;
   }
+
+  public Post update(Post post, Long postId) {
+    Post findPost = this.getPost(postId);
+    Long currentUserId = userService.getCurrentUser().getId();
+
+    if (findPost != null && findPost.getAuthor().getId().equals(currentUserId)) {
+      findPost.setCaption(post.getCaption());
+      findPost.setCreatedAt(LocalDateTime.now());
+      return postRepository.save(findPost);
+    }
+
+    return null;
+  }
 }

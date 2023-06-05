@@ -41,7 +41,7 @@ public class PostController {
     postService.test(postMedia);
   }
 
-  @PostMapping("/delete{id}")
+  @PostMapping("/delete/{id}")
   public ResponseEntity<?> deletePost(@PathVariable Long id) throws Exception {
     boolean isDeleted = postService.delete(id);
     Map<Object, Object> response = new HashMap<>();
@@ -74,5 +74,18 @@ public class PostController {
     response.put("message", "saved");
     return ResponseEntity.ok(response);
   }
+
+  @PostMapping("/update/{postId}")
+  public ResponseEntity<?> updatePost(@PathVariable Long postId, Post post) {
+    Post updatedPost = postService.update(post, postId);
+    Map<Object, Object> response = new HashMap<>();
+    response.put("status", "success");
+    response.put("message", "updated");
+    response.put("post", updatedPost);
+
+    return ResponseEntity.ok(response);
+  }
+
+
 
 }
