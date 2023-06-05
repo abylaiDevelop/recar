@@ -55,4 +55,8 @@ public class CommentService {
     PostComment postComment = this.getComment(id);
     return postComment.getReplies();
   }
+
+  public void deleteComment(Long commentId) {
+    commentRepository.deleteById(commentId);
+  }
 }
