@@ -46,8 +46,8 @@ public class PhotoService {
   }
 
   public Photo uploadPhoto(MultipartFile file) {
-    String directoryName = "user_"+this.getCurrentUser().getId();
-    Path root = Paths.get(UPLOAD_DIRECTORY, directoryName);
+//    String directoryName = "user_"+this.getCurrentUser().getId();
+    Path root = Paths.get(UPLOAD_DIRECTORY);
     try {
       this.init(root);
       long photoId = this.getLastId() + 1L;
@@ -98,8 +98,8 @@ public class PhotoService {
   }
 
   public Resource downloadFile(String filePath) throws IOException {
-    String directoryName = "user_"+this.getCurrentUser().getId();
-    Path dirPath = Paths.get(UPLOAD_DIRECTORY, directoryName);
+//    String directoryName = "user_"+this.getCurrentUser().getId();
+    Path dirPath = Paths.get(UPLOAD_DIRECTORY);
     Files.list(dirPath).forEach(file -> {
       if (file.getFileName().toString().startsWith(filePath)) {
         this.foundfile = file;

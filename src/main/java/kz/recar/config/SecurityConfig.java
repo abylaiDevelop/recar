@@ -48,6 +48,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()
             .antMatchers(LOGIN_ENDPOINT).permitAll()
+            .antMatchers("/api/v1/file/download/**").permitAll()
             .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
             .anyRequest().authenticated()
             .and()
