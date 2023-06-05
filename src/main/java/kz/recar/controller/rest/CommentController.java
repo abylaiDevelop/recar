@@ -3,9 +3,11 @@ package kz.recar.controller.rest;
 import kz.recar.model.Post;
 import kz.recar.model.PostComment;
 import kz.recar.services.CommentService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,16 @@ public class CommentController {
   @GetMapping("/{postId}")
   public List<PostComment> getComments(@PathVariable Long postId) {
     return commentService.getComments(postId);
+  }
+
+  @GetMapping("/get/{postId}/{page}")
+  public List<PostComment> getCommentsPage(@PathVariable Long postId,
+                                           @PathVariable Integer page,
+                                           @RequestParam(value = "limit", defaultValue = "10") @Min(0) Integer limit
+  ) {
+    System.out.println("keledi");
+    List<PostComment> result = commentService.getPageComments(postId, page, limit);
+    return result;
   }
 
   @PostMapping("/add/{postId}")
