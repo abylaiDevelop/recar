@@ -4,6 +4,9 @@ import kz.recar.model.Post;
 import kz.recar.model.PostComment;
 import kz.recar.repository.PostCommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -58,5 +61,11 @@ public class CommentService {
 
   public void deleteComment(Long commentId) {
     commentRepository.deleteById(commentId);
+  }
+
+  public List<PostComment> getPageComments(Long postId, Integer page, Integer limit) {
+    Pageable pageable = PageRequest.of(page, limit);
+    Post post = postService.getPost(postId);
+    return commentRepository.findAllByPost(post, pageable);
   }
 }
