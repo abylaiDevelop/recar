@@ -49,6 +49,9 @@ public class User extends BaseEntity implements UserDetails {
   @OneToOne(cascade = CascadeType.ALL)
   private Photo avatar;
 
+  @OneToOne(cascade =  CascadeType.ALL)
+  private Photo backgroundPhoto;
+
   @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
   @JsonIgnore
   private List<Post> userPosts;

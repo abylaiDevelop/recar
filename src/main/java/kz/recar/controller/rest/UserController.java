@@ -47,6 +47,11 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  @PostMapping("/upload/background")
+  public Photo uploadBackground(@RequestParam MultipartFile file) {
+    return userService.uploadBackground(file);
+  }
+
   @PostMapping("/follow")
   public Follower followUser(Long userId) {
     return userService.followUser(userId);

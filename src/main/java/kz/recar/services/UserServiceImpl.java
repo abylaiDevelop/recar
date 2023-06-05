@@ -117,6 +117,14 @@ public class UserServiceImpl implements UserService {
     repository.save(user);
   }
 
+  public Photo uploadBackground(MultipartFile file) {
+    Photo photo = photoService.uploadPhoto(file);
+    User user = this.getCurrentUser();
+    user.setBackgroundPhoto(photo);
+    repository.save(user);
+    return photo;
+  }
+
   public Follower followUser(Long id) {
     Follower follower = new Follower();
     User user = this.getCurrentUser();
