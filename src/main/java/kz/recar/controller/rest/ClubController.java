@@ -1,10 +1,13 @@
 package kz.recar.controller.rest;
 
 import kz.recar.model.Club;
+import kz.recar.model.Post;
+import kz.recar.model.PostMedia;
 import kz.recar.services.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,5 +54,10 @@ public class ClubController {
   @PostMapping("/assign/admin/{clubId}/{userId}")
   public Club assignAdmin(@PathVariable Long clubId, @PathVariable Long userId) {
     return clubService.assignAdmin(clubId, userId);
+  }
+
+  @PostMapping("/create/post/{clubId}")
+  public Post createPost(Post post, @PathVariable Long clubId, @RequestParam MultipartFile file, PostMedia postMedia) {
+    return clubService.createPost(post, clubId, file, postMedia);
   }
 }
