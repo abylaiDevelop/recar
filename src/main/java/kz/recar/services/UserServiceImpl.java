@@ -174,4 +174,12 @@ public class UserServiceImpl implements UserService {
     User user = getCurrentUser();
     return user.getSavedPosts();
   }
+
+  public void unFollow(Long userId) {
+    User user = getCurrentUser();
+    User targetUser = this.getById(userId);
+    Follower targetFollow = followerRepository.findFollowerByFollowedUserAndFollowingUser(user, targetUser);
+    followerRepository.delete(targetFollow);
+
+  }
 }

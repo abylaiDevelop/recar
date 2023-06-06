@@ -82,5 +82,11 @@ public class UserController {
     return userService.savedPosts();
   }
 
+  @PostMapping("/unFollow/{userId}")
+  public ResponseEntity<?> unFollow(@PathVariable Long userId) {
+    userService.unFollow(userId);
+    return ResponseEntity.ok(new HashMap<>());
+  }
+
 
 }
