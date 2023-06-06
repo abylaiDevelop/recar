@@ -29,7 +29,6 @@ public class EventsController {
   }
 
 
-  @PreAuthorize("hasAnyRole('CLUB_ADMIN')")
   @PostMapping("/create/{clubId}")
   public Events createEvent(Events event, Location location, @PathVariable Long clubId) {
     return eventService.createEvent(event,location, clubId);

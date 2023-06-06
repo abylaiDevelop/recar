@@ -1,12 +1,10 @@
 package kz.recar.controller.rest;
 
 import kz.recar.model.User;
+import kz.recar.services.PostService;
 import kz.recar.services.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +13,11 @@ import java.util.Map;
 @RequestMapping("/api/v1/profile")
 public class ProfileController {
   private final UserServiceImpl userService;
+  private final PostService postService;
 
-  public ProfileController(UserServiceImpl userService) {
+  public ProfileController(UserServiceImpl userService, PostService postService) {
     this.userService = userService;
+    this.postService = postService;
   }
 
   @GetMapping
@@ -42,6 +42,14 @@ public class ProfileController {
     response.put("saves", user.getSavedPosts());
     response.put("clubs", user.getClub());
     response.put("events", user.getUserEvents());
+    return ResponseEntity.ok(response);
+  }
+
+  @PostMapping("/post/delete/{postId}")
+  public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+    postService.deletePost(postId);
+    Map<Object, Object> response = new HashMap<>();
+    response.put("message", "ok");
     return ResponseEntity.ok(response);
   }
 }

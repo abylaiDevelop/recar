@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private FollowerRepository followerRepository;
 
+
   public User getById(Long id) {
     boolean check = repository.findById(id).isPresent();
     if (check) {
@@ -182,4 +183,5 @@ public class UserServiceImpl implements UserService {
     followerRepository.delete(targetFollow);
 
   }
+
 }

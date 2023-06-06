@@ -1,7 +1,9 @@
 package kz.recar.services;
 
+import kz.recar.model.Club;
 import kz.recar.model.Events;
 import kz.recar.model.Location;
+import kz.recar.model.User;
 import kz.recar.repository.EventRepository;
 import kz.recar.repository.LocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +52,18 @@ public class EventService {
   }
 
   public Events createEvent(Events events, Location location, Long clubId) {
-    events.setLocation(locationRepository.save(location));
-    events.setAuthor(clubService.getClub(clubId));
-    return eventRepository.save(events);
+    Club club = clubService.getClub(clubId);
+    List<User> admins = club.getAdmins();
+    User currentUser = userService.getCurrentUser();
+    boolean check = admins.stream().anyMatch(o -> o.getId().equals(currentUser.getId()));
+
+    if (check) {
+      events.setLocation(locationRepository.save(location));
+      events.setAuthor(clubService.getClub(clubId));
+      return eventRepository.save(events);
+    }
+
+    return null;
   }
 
   public void deleteEvent(Long id) {

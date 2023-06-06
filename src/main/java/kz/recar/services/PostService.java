@@ -118,4 +118,16 @@ public class PostService {
 
     return null;
   }
+
+  public void deletePost(Long postId) {
+    Post post = this.getPost(postId);
+    User user = userService.getCurrentUser();
+    if (post != null) {
+      User author = post.getAuthor();
+
+      if (author.getId().equals(user.getId())) {
+        this.delete(postId);
+      }
+    }
+  }
 }
